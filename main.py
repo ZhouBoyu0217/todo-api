@@ -27,6 +27,7 @@ def put_todos(todo:Todo,id:int):
     flag=False
     for i in todos:
         if i["id"]==id:
+            flag=True
             i["content"]=todo.content
     if flag:
         return {"message":"已修改","编号":id,"content":todo.content}
