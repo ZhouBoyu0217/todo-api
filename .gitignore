@@ -8,3 +8,6 @@ __pycache__/
 
 # 本地数据库（运行生成的个人数据，不入库）
 todos.db
+.env
+# 一次性测试脚本（内含 API key，切勿入库）
+test_ai.py
