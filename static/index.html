@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>秋招待办 · 像素版</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6.5' height='6.5' fill='%23FF9F45'/%3E%3Crect x='8.5' y='1' width='6.5' height='6.5' fill='%237C5CFC'/%3E%3Crect x='1' y='8.5' width='6.5' height='6.5' fill='%233C466B'/%3E%3Crect x='8.5' y='8.5' width='6.5' height='6.5' fill='%23FFFFFF'/%3E%3C/svg%3E">
+
+<style>
+/* ============ 像素字体（自托管，Fusion Pixel 12px，OFL 开源协议） ============ */
+@font-face {
+  font-family: 'Fusion Pixel';
+  src: url('/fonts/fusion-pixel.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* ============ 设计令牌：像素皮 + 原参考配色 ============ */
+:root {
+  --navy:        #202640;   /* 侧边栏 / 深色卡片 */
+  --navy-2:      #2A3154;
+  --navy-3:      #3C466B;   /* logo 用 */
+  --bg:          #F4F6FB;
+  --card:        #FFFFFF;
+  --ink:         #23283E;
+  --dim:         #7C84A0;
+  --faint:       #A6ADC2;
+  --line:        #EAEDF5;
+  --bdr:         #C9CFDD;   /* 像素边框 */
+  --purple:      #7C5CFC;
+  --purple-2:    #6B4AEF;
+  --purple-3:    #5A3BD1;   /* 按钮深边 */
+  --purple-soft: #EFEBFF;
+  --orange:      #FF9F45;
+  --orange-2:    #F08A2E;
+  --orange-3:    #D97A1F;   /* 按钮深边 */
+  --orange-soft: #FFF3E7;
+  --danger:      #F5566A;
+  --danger-soft: #FEEBEE;
+  --shadow:      4px 4px 0 rgba(32,38,64,.10);          /* 硬阴影，像素风 */
+  --shadow-pop:  6px 6px 0 rgba(32,38,64,.30);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Fusion Pixel', 'Microsoft YaHei', sans-serif;
+  font-size: 12px;
+  line-height: 1.7;
+  background: #E9EFFA;   /* 天空底色：背景像素场景画布的兜底色 */
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: none;   /* 像素字体别抗锯齿 */
+}
+
+button, input { font-family: inherit; font-size: 12px; }
+
+:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+
+/* CRT 扫描线罩层：极淡，复古味 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: repeating-linear-gradient(0deg, rgba(32,38,64,.035) 0 1px, transparent 1px 3px);
+}
+
+/* 背景像素场景画布：全屏铺底，pointer-events:none 不挡任何交互 */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+/* ============ 骨架 ============ */
+.shell { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+/* ---------- 侧边栏 ---------- */
+.sidebar {
+  width: 88px;
+  flex-shrink: 0;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  padding: 22px 12px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+}
+
+.logo {
+  width: 40px; height: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.logo i { background: transparent; }
+.logo i:nth-child(1) { background: var(--orange); }
+.logo i:nth-child(2) { background: var(--purple); }
+.logo i:nth-child(3) { background: var(--navy-3); }
+.logo i:nth-child(4) { background: rgba(255,255,255,.9); }
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.side-btn {
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  border: 2px solid transparent;
+  background: transparent;
+  color: #98A0BC;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.side-btn svg { width: 22px; height: 22px; }
+.side-btn:hover { color: #fff; background: rgba(255,255,255,.07); }
+.side-btn:active { transform: scale(.88); }
+.side-btn.on  { color: #fff; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); }
+
+/* ---------- 主内容区 ---------- */
+.main {
+  flex: 1;
+  min-width: 0;
+  max-width: 1600px;
+  margin-inline: auto;   /* 侧边栏右侧空间里水平居中 */
+  padding: 32px 40px 48px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.topbar h1 { font-size: 24px; letter-spacing: 1px; }
+.topbar .today-line { font-size: 12px; color: var(--dim); margin-top: 6px; }
+
+.btn-popup {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 2px solid var(--purple-3);
+  background: var(--purple);
+  box-shadow: 3px 3px 0 rgba(32,38,64,.25);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background .15s, transform .1s, box-shadow .1s;
+}
+.btn-popup svg { width: 16px; height: 16px; }
+.btn-popup:hover { background: var(--purple-2); }
+.btn-popup:active { transform: translate(2px,2px) scale(.92); box-shadow: 1px 1px 0 rgba(32,38,64,.25); }
+
+/* ---------- 统计卡 ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.stat {
+  background: var(--card);
+  border: 2px solid var(--bdr);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+}
+.stat-num {
+  display: block;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-label { display: block; font-size: 12px; color: var(--dim); margin-top: 8px; }
+.stat-sub   { display: block; font-size: 12px; color: var(--faint); margin-top: 4px; }
+.stat-accent .stat-num { color: var(--orange); }
+
+/* ---------- 双列网格 ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  margin-top: 24px;
+  align-items: start;
+}
+
+.col-main, .col-side { display: flex; flex-direction: column; gap: 20px; }
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--bdr);
+  box-shadow: var(--shadow);
+}
+
+/* 窗口手感：悬停放大、按下缩小（steps 阶梯缩放，明显且有像素感） */
+.stat, .profile, .datecard {
+  position: relative;
+  transition: transform .18s steps(3), box-shadow .18s steps(3);
+}
+.stat:hover, .profile:hover, .datecard:hover {
+  transform: scale(1.04);
+  z-index: 2;
+}
+.stat:active, .profile:active, .datecard:active {
+  transform: scale(.94);
+  box-shadow: 1px 1px 0 rgba(32,38,64,.10);
+}
+
+/* ---------- 输入区 ---------- */
+.composer.card { padding: 0; }
+.composer-head {
+  padding: 14px 24px;
+  border-bottom: 2px solid var(--line);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.composer-body {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+}
+.composer-body input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 2px solid var(--bdr);
+  outline: none;
+  transition: border-color .15s, background .15s;
+}
+.composer-body input::placeholder { color: var(--faint); }
+.composer-body input:focus { background: #fff; border-color: var(--purple); }
+.composer-body button {
+  flex-shrink: 0;
+  padding: 0 28px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--orange);
+  border: 2px solid var(--orange-3);
+  box-shadow: 3px 3px 0 rgba(32,38,64,.20);
+  cursor: pointer;
+  transition: background .15s, transform .1s, box-shadow .1s;
+}
+.composer-body button:hover { background: var(--orange-2); }
+.composer-body button:active { transform: translate(2px,2px) scale(.94); box-shadow: 1px 1px 0 rgba(32,38,64,.20); }
+.composer-body button:disabled { background: #F4C79B; border-color: #D9A765; cursor: not-allowed; }
+
+/* ---------- 任务列表 ---------- */
+.list-card { padding: 0; overflow: hidden; }
+
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px 12px;
+  border-bottom: 2px solid var(--line);
+}
+.list-head h2 { font-size: 12px; letter-spacing: 1px; }
+.count-pill {
+  font-size: 12px;
+  color: var(--purple-2);
+  background: var(--purple-soft);
+  border: 2px solid #DCD2FF;
+  padding: 1px 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.list { list-style: none; }
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 2px solid var(--line);
+  transition: background .15s;
+}
+.item:last-child { border-bottom: none; }
+.item:hover { background: #FAFBFE; }
+
+/* 方形勾选框（像素风） */
+.check {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #9AA2BC;
+  background: #fff;
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .1s;
+}
+.check svg {
+  width: 10px; height: 10px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.check:hover { border-color: var(--purple); }
+.check:active { transform: scale(.88); }
+.item.done .check { background: var(--purple-2); border-color: var(--purple-3); }
+.item.done .check svg { opacity: 1; }
+
+.item-body { flex: 1; min-width: 0; }
+.item-text {
+  position: relative;   /* 划线动画挂在伪元素上 */
+  font-size: 12px;
+  line-height: 1.7;
+  word-break: break-word;
+}
+/* 完成划线：不是静态 text-decoration，而是一条可动画的伪元素线 */
+.item-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2px;
+  width: 0;
+  background: var(--purple-2);
+}
+.item.done .item-text { color: var(--faint); }
+.item.done .item-text::after { width: 100%; }
+
+/* ---- 勾选动画：三段式（回弹 → 逐段划线 → 闪烁消失） ---- */
+.item.checking { pointer-events: none; }
+.item.checking .item-text { color: var(--faint); }
+.item.checking .item-text::after { animation: strike .35s steps(5) forwards; }
+.item.checking .check {
+  background: var(--purple-2);
+  border-color: var(--purple-3);
+  animation: checkpop .3s steps(3);
+}
+.item.checking .check svg { opacity: 1; }
+
+/* 取消勾选：划线反向缩回 */
+.item.unchecking { pointer-events: none; }
+.item.unchecking .item-text::after {
+  width: 100%;
+  animation: strike .25s steps(4) reverse forwards;
+}
+
+/* 待办视图里勾完后：闪烁两下再让元素退场（街机消灭特效） */
+.item.vanishing { animation: vanish .3s steps(1) forwards; }
+
+@keyframes strike {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes checkpop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+@keyframes vanish {
+  0%   { opacity: 1; }
+  33%  { opacity: 0; }
+  66%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.edit-input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  border: 2px solid var(--purple);
+  outline: none;
+  background: #fff;
+}
+
+.item-id {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--faint);
+  background: #F4F6FB;
+  border: 2px solid var(--line);
+  padding: 1px 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.item-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.item:hover .item-actions,
+.item.editing .item-actions { opacity: 1; }
+
+.btn-ghost {
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--dim);
+  background: #fff;
+  border: 2px solid var(--bdr);
+  box-shadow: 2px 2px 0 rgba(32,38,64,.12);
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-ghost:hover {
+  color: var(--purple-2);
+  border-color: var(--purple);
+  background: var(--purple-soft);
+}
+.btn-ghost:active { transform: translate(1px,1px) scale(.94); box-shadow: 1px 1px 0 rgba(32,38,64,.12); }
+.btn-ghost.danger:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+.btn-ghost.primary {
+  color: #fff;
+  background: var(--purple);
+  border-color: var(--purple-3);
+}
+.btn-ghost.primary:hover { background: var(--purple-2); }
+
+.empty {
+  padding: 44px 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--dim);
+}
+
+/* ---------- 右侧栏 ---------- */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+}
+.avatar {
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--purple-soft);
+  border: 2px solid var(--purple);
+  color: var(--purple-2);
+  font-size: 20px;
+}
+.profile-name { font-size: 12px; letter-spacing: 1px; }
+.profile-sub  { font-size: 12px; color: var(--dim); margin-top: 4px; }
+
+.datecard {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  border: 2px solid var(--orange-3);
+  background: var(--orange-soft);
+  box-shadow: var(--shadow);
+  text-align: left;
+  cursor: pointer;
+}
+.datecard-date { font-size: 12px; letter-spacing: .04em; color: #E8822A; }
+.datecard-title { font-size: 12px; color: #8A4A0F; margin-top: 6px; }
+.datecard-sub { font-size: 12px; color: #B3764B; margin-top: 4px; }
+
+/* ---------- 紫色弹窗 ---------- */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(32,38,64,.5);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 100;
+}
+.backdrop[hidden] { display: none; }
+
+.popup {
+  position: relative;
+  width: min(380px, 100%);
+  padding: 26px;
+  background: linear-gradient(160deg, var(--purple), var(--purple-2));
+  border: 2px solid rgba(255,255,255,.55);
+  box-shadow: var(--shadow-pop);
+  color: #fff;
+  animation: popin .32s cubic-bezier(.34,1.3,.64,1);
+}
+@keyframes popin {
+  0%   { opacity: 0; transform: translateY(24px) scale(.6); }
+  60%  { opacity: 1; transform: scale(1.05); }
+  100% { transform: none; }
+}
+.popup-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 28px; height: 28px;
+  border: 2px solid rgba(255,255,255,.55);
+  background: rgba(255,255,255,.16);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s;
+}
+.popup-close:hover { background: rgba(255,255,255,.3); }
+.popup h3 { font-size: 24px; letter-spacing: 2px; }
+.popup-sub { font-size: 12px; color: rgba(255,255,255,.7); margin-top: 6px; }
+.popup-date { font-size: 12px; color: rgba(255,255,255,.85); margin-top: 10px; }
+.popup-now { margin-top: 16px; }
+.popup-label { font-size: 12px; color: rgba(255,255,255,.6); }
+.popup-main { font-size: 12px; margin-top: 6px; }
+/* 分段进度条（像素血条风） */
+.bar-segs { display: flex; gap: 3px; margin-top: 12px; }
+.bar-segs .seg { flex: 1; height: 12px; background: rgba(255,255,255,.25); }
+.bar-segs .seg.on { background: #fff; }
+.popup-meta { font-size: 12px; color: rgba(255,255,255,.75); margin-top: 8px; }
+.popup-next {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 2px solid rgba(255,255,255,.25);
+}
+.popup-next .popup-main { word-break: break-word; }
+
+/* ---------- 像素宠物 ---------- */
+.pet {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  width: 56px;     /* 像素画实体 14x12 格 × 4px，容器必须有实际尺寸，box-shadow 向右下扩展 */
+  height: 48px;
+  z-index: 80;
+  cursor: pointer;
+  user-select: none;
+}
+.pet-sprite {
+  width: 4px; height: 4px;   /* 真正的像素来自 box-shadow，本体透明 */
+  background: transparent;
+  animation: pet-bob .8s steps(2) infinite;
+}
+@keyframes pet-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+.pet.jump .pet-sprite { animation: pet-jump .55s cubic-bezier(.3,.7,.4,1); }
+@keyframes pet-jump {
+  0%   { transform: translateY(0) scaleY(1); }
+  35%  { transform: translateY(-16px) scaleY(1.06); }
+  60%  { transform: translateY(0) scaleY(.92); }
+  100% { transform: translateY(0) scaleY(1); }
+}
+
+.pet-bubble {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background: #fff;
+  border: 2px solid var(--navy);
+  box-shadow: 3px 3px 0 rgba(32,38,64,.25);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.pet-bubble[hidden] { display: none; }
+
+.pet-particle {
+  position: absolute;
+  bottom: 44px;
+  width: 4px; height: 4px;
+  animation: float-up 1.4s ease-out forwards;
+}
+@keyframes float-up {
+  0%   { transform: translateY(0); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translateY(-72px); opacity: 0; }
+}
+
+/* ---------- 页脚 / 提示条 ---------- */
+.footer {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translate(-50%, 16px);
+  padding: 10px 20px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--navy);
+  border: 2px solid #fff;
+  box-shadow: 4px 4px 0 rgba(32,38,64,.30);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s, transform .22s;
+  z-index: 200;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#toast.error { background: var(--danger); border-color: #fff; }
+
+/* ---------- 首屏浮现动画（只此一次） ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.stat, .grid > * > * { animation: rise .45s ease backwards; }
+.stats .stat:nth-child(2) { animation-delay: .06s; }
+.stats .stat:nth-child(3) { animation-delay: .12s; }
+.col-main > :nth-child(2) { animation-delay: .1s; }
+.col-side > :nth-child(2) { animation-delay: .12s; }
+.col-side > :nth-child(3) { animation-delay: .18s; }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: 1fr; }
+  .col-side { flex-direction: row; }
+  .col-side .profile { flex: 1; }
+  .col-side .datecard { flex: 1; }
+}
+
+@media (max-width: 720px) {
+  .shell { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 16px;
+  }
+  .side-nav { flex-direction: row; width: auto; margin-left: auto; gap: 8px; }
+  .side-btn { width: 56px; padding: 8px 6px; }
+  .main { padding: 20px 16px 40px; }
+  .topbar h1 { font-size: 20px; }
+  .item-actions { opacity: 1; }   /* 触屏没有 hover，操作按钮常显 */
+  .col-side { flex-direction: column; }   /* 窄屏恢复纵向堆叠 */
+  .pet { right: 16px; bottom: 16px; transform: scale(.85); transform-origin: bottom right; }
+}
+
+/* ---------- 无障碍：跟随系统减少动效 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- 背景像素场景画布（低分辨率放大，image-rendering: pixelated） -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<div class="shell">
+  <!-- 左侧导航：图标即过滤器 -->
+  <aside class="sidebar">
+    <div class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <nav class="side-nav" aria-label="任务过滤器">
+      <button class="side-btn on" data-filter="all" title="全部任务">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span>全部</span>
+      </button>
+      <button class="side-btn" data-filter="pending" title="待完成">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3.5" y="3.5" width="17" height="17"/></svg>
+        <span>待办</span>
+      </button>
+      <button class="side-btn" data-filter="done" title="已完成">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><rect x="3.5" y="3.5" width="17" height="17"/><path d="M7.5 12.5l3 3 6-7"/></svg>
+        <span>完成</span>
+      </button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <!-- 问候 + 紫色入口按钮 -->
+    <header class="topbar">
+      <div>
+        <h1 id="greet">你好，周同学</h1>
+        <p class="today-line" id="today-line">…</p>
+      </div>
+      <button class="btn-popup" id="btn-popup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><rect x="3.5" y="4.5" width="17" height="16"/><path d="M3.5 9.5h17M8.5 2.5v4M15.5 2.5v4"/></svg>
+        今日概览
+      </button>
+    </header>
+
+    <!-- 统计卡组 -->
+    <section class="stats" aria-label="任务统计">
+      <div class="stat">
+        <span class="stat-num" id="stat-total">0</span>
+        <span class="stat-label">总任务</span>
+        <span class="stat-sub">累计添加</span>
+      </div>
+      <div class="stat stat-accent">
+        <span class="stat-num" id="stat-done">0</span>
+        <span class="stat-label">已完成</span>
+        <span class="stat-sub" id="stat-rate">完成率 0%</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-pending">0</span>
+        <span class="stat-label">待完成</span>
+        <span class="stat-sub">稳住节奏</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <!-- 左列 -->
+      <div class="col-main">
+        <form class="card composer" id="composer">
+          <div class="composer-head">添加任务</div>
+          <div class="composer-body">
+            <input id="input" type="text" placeholder="写下今天要完成的事，回车添加" autocomplete="off" maxlength="200">
+            <button type="submit" id="submit-btn">添加任务</button>
+          </div>
+        </form>
+
+        <section class="card list-card">
+          <div class="list-head">
+            <h2 id="list-title">待办清单</h2>
+            <span class="count-pill" id="list-count">0</span>
+          </div>
+          <ul class="list" id="list"></ul>
+        </section>
+      </div>
+
+      <!-- 右列 -->
+      <aside class="col-side">
+        <section class="card profile">
+          <div class="avatar" aria-hidden="true">周</div>
+          <div>
+            <p class="profile-name">欢迎回来，周同学</p>
+            <p class="profile-sub">秋招冲刺 · 稳住节奏</p>
+          </div>
+        </section>
+
+        <button class="datecard" id="btn-datecard" aria-label="打开今日概览">
+          <p class="datecard-date" id="datecard-date">Oct 12, 2026</p>
+          <p class="datecard-title">秋招进行时 · 每天完成一点点</p>
+          <p class="datecard-sub">点击查看今日概览 ►</p>
+        </button>
+      </aside>
+    </div>
+
+    <p class="footer">数据保存在本地 SQLite · FastAPI 驱动</p>
+  </main>
+</div>
+
+<!-- 紫色弹窗 -->
+<div class="backdrop" id="backdrop" hidden>
+  <section class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <button class="popup-close" id="popup-close" aria-label="关闭">×</button>
+    <h3 id="popup-title">今日概览</h3>
+    <p class="popup-sub">今天的任务进度与安排</p>
+    <p class="popup-date" id="popup-date">今天 · …</p>
+    <div class="popup-now">
+      <p class="popup-label">现在</p>
+      <p class="popup-main" id="popup-now">—</p>
+      <div class="bar-segs" id="popup-bar"></div>
+      <p class="popup-meta" id="popup-meta">—</p>
+    </div>
+    <div class="popup-next">
+      <p class="popup-label">接下来</p>
+      <p class="popup-main" id="popup-next">—</p>
+    </div>
+  </section>
+</div>
+
+<!-- 像素宠物（box-shadow 像素画，纯 JS 生成） -->
+<div class="pet" id="pet" aria-hidden="true">
+  <div class="pet-bubble" id="pet-bubble" hidden>喵~</div>
+  <div class="pet-sprite" id="pet-sprite"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   接口地址：前端由 FastAPI 托管，同源，直接写相对路径
+   数据形状：{ id, content, done }
+   ========================================================= */
+const API = '/todos';
+
+const $ = (s) => document.querySelector(s);
+
+let todos = [];          // 本地缓存
+let filter = 'all';      // 'all' | 'pending' | 'done'
+let editingId = null;    // 正在编辑的任务 id
+let lastAllDone = false; // 记录"全部完成"状态，避免宠物重复庆祝
+
+/* ---------------- 小工具 ---------------- */
+
+let toastTimer = null;
+function toast(msg, isError = false) {
+  const $toast = $('#toast');
+  $toast.textContent = msg;
+  $toast.classList.toggle('error', isError);
+  $toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $toast.classList.remove('show'), 2200);
+}
+
+async function request(url, options = {}) {
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+function fmtDate(d) {
+  const wd = ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  return `${d.getMonth() + 1}月${d.getDate()}日 · ${wd}`;
+}
+
+function fmtDateEn(d) {
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return `${m} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function visibleTodos() {
+  if (filter === 'done') return todos.filter(t => t.done);
+  if (filter === 'pending') return todos.filter(t => !t.done);
+  return todos;
+}
+
+/* =========================================================
+   背景像素场景：2D 横版卷轴，借鉴早期像素游戏（马里奥式）
+   云朵 / 太阳 / 双层远山视差 / 滚动草地 / 行走的小人 / 飞鸟
+   320x180 低分辨率画布放大，纯装饰，pointer-events:none
+   ========================================================= */
+(function initBgScene() {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const W = 320, H = 180;
+  canvas.width = W;
+  canvas.height = H;
+
+  const C = {
+    sky: '#E9EFFA',
+    cloud: '#FFFFFF',
+    sun: '#FFD84D', sunCore: '#FFF3C4',
+    hillFar: '#D8E4F4', hillNear: '#C3D5EF',
+    grass: '#A9DBA4', grassEdge: '#7FBF7A', dirt: '#DCD0AE', dirtSpeck: '#C6B790',
+    out: '#202640', body: '#FF9F45', white: '#FFFFFF', purple: '#7C5CFC',
+  };
+
+  const CLOUD = [
+    '..OO.....OO..',
+    '.OOOO..OOOOO.',
+    'OOOOOOOOOOOOO',
+    '.OOOOOOOOOOO.',
+  ];
+  const SUN = [
+    '..YYYY..',
+    '.YYYYYY.',
+    'YYYYYYYY',
+    'YYWWWWYY',
+    'YYWWWWYY',
+    'YYYYYYYY',
+    '.YYYYYY.',
+    '..YYYY..',
+  ];
+  const HERO_A = [   // 迈步（手臂打开，双腿分开）
+    '..OOOO..',
+    '..OWWO..',
+    '..OBBO..',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    'OBBBBBBO',
+    '.OBBBBO.',
+    '.O.BBO..',
+    'O..BB..O',
+    'O..BB..O',
+  ];
+  const HERO_B = [   // 并步
+    '..OOOO..',
+    '..OWWO..',
+    '..OBBO..',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    '.OBBBBO.',
+    '..OBBO..',
+    '..OBBO..',
+  ];
+  const BIRD_A = ['O....O', 'OP..PO', 'OPPPPO', '.OOOO.'];   // 展翅
+  const BIRD_B = ['.O..O.', 'OPPPPO', 'OPPPPO', '.OOOO.'];   // 收翅
+
+  const GROUND_H = 26;
+  const groundY = H - GROUND_H;
+
+  function drawArt(rows, x, y, colors, cell) {
+    rows.forEach((row, ry) => {
+      [...row].forEach((ch, rx) => {
+        const color = colors[ch];
+        if (color) {
+          ctx.fillStyle = color;
+          ctx.fillRect(x + rx * cell, y + ry * cell, cell, cell);
+        }
+      });
+    });
+  }
+
+  // 阶梯状山丘（早期平台游戏远山）
+  function drawHill(x, baseY, h, period) {
+    for (let k = 0; k < h; k++) {
+      const w = period - k * 4;
+      if (w <= 0) break;
+      ctx.fillRect(x + k * 2, baseY - k, w, 1);
+    }
+  }
+
+  const clouds = [
+    { x: 24, y: 16, s: 5 },
+    { x: 150, y: 30, s: 3.5 },
+    { x: 250, y: 12, s: 6 },
+  ];
+  const hero = { x: 44, dir: 1, t: 0, jumpAt: 3, jumpLen: .6 };
+  let bird = null;
+  let birdTimer = 3;
+  let time = 0;
+
+  function drawScene(dt) {
+    time += dt;
+
+    // 天空
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = C.sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // 太阳
+    ctx.globalAlpha = .7;
+    drawArt(SUN, 268, 12, { Y: C.sun, W: C.sunCore }, 2);
+
+    // 云（缓慢飘动，循环）
+    ctx.globalAlpha = .8;
+    clouds.forEach(c => {
+      c.x -= c.s * dt;
+      if (c.x < -26) c.x = W + 8;
+      drawArt(CLOUD, Math.round(c.x), c.y, { O: C.cloud }, 2);
+    });
+
+    // 双层远山（视差滚动）
+    ctx.globalAlpha = .5;
+    ctx.fillStyle = C.hillFar;
+    const offFar = (time * 6) % 24;
+    for (let x = -24; x < W + 24; x += 24) drawHill(x - offFar, groundY, 10, 24);
+    ctx.globalAlpha = .6;
+    ctx.fillStyle = C.hillNear;
+    const offNear = (time * 10) % 36;
+    for (let x = -36; x < W + 36; x += 36) drawHill(x - offNear, groundY, 15, 36);
+
+    // 草地地面（滚动）
+    ctx.globalAlpha = .7;
+    const tileOff = Math.round(time * 24) % 8;
+    for (let x = -8; x < W + 8; x += 8) {
+      const tx = x - tileOff;
+      ctx.fillStyle = C.dirt;
+      ctx.fillRect(tx, groundY + 4, 8, GROUND_H - 4);
+      ctx.fillStyle = C.dirtSpeck;
+      ctx.fillRect(tx + 2, groundY + 9, 2, 2);
+      ctx.fillRect(tx + 5, groundY + 15, 2, 2);
+      ctx.fillStyle = C.grass;
+      ctx.fillRect(tx, groundY, 8, 4);
+      ctx.fillStyle = C.grassEdge;
+      ctx.fillRect(tx, groundY, 8, 1);
+    }
+
+    // 行走的小人：到头折返，隔几秒跳一下
+    hero.t += dt;
+    let jumpOff = 0;
+    if (time >= hero.jumpAt && time < hero.jumpAt + hero.jumpLen) {
+      const p = (time - hero.jumpAt) / hero.jumpLen;
+      jumpOff = -Math.round(Math.sin(p * Math.PI) * 12);
+    } else if (time >= hero.jumpAt + hero.jumpLen) {
+      hero.jumpAt = time + 3.5 + Math.random() * 2;
+    }
+    hero.x += hero.dir * 26 * dt;
+    if (hero.x < 30) hero.dir = 1;
+    if (hero.x > W - 46) hero.dir = -1;
+    const walking = jumpOff === 0 && Math.floor(hero.t * 4) % 2 === 0;
+    ctx.globalAlpha = .65;
+    drawArt(walking ? HERO_A : HERO_B, Math.round(hero.x), groundY - 22 + jumpOff,
+      { O: C.out, B: C.body, W: C.white }, 2);
+
+    // 飞鸟（不定时横穿天空）
+    if (bird) {
+      bird.x += 30 * dt;
+      bird.flap += dt;
+      if (bird.x > W + 8) {
+        bird = null;
+        birdTimer = 6 + Math.random() * 5;
+      } else {
+        ctx.globalAlpha = .6;
+        drawArt(Math.floor(bird.flap * 5) % 2 ? BIRD_A : BIRD_B,
+          Math.round(bird.x), bird.y, { O: C.out, P: C.purple }, 2);
+      }
+    } else {
+      birdTimer -= dt;
+      if (birdTimer <= 0) bird = { x: -10, y: 36 + Math.random() * 50, flap: 0 };
+    }
+  }
+
+  // 跟随系统"减少动效"设置：只画静态一帧
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    drawScene(0);
+    return;
+  }
+
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min((now - last) / 1000, .1);
+    last = now;
+    drawScene(dt);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* =========================================================
+   像素宠物：字符画 → box-shadow 像素
+   调色板：O 描边 B 身体 H 高光 E 眼睛 M 嘴 W 白 P 粉 Y 黄
+   ========================================================= */
+const CELL = 4;
+const PALETTE = {
+  '.': null, O: '#202640', B: '#FF9F45', H: '#FFE3BC',
+  E: '#202640', M: '#7A3E12', W: '#FFFFFF', P: '#FF7BAC', Y: '#FFD84D',
+};
+const PET_FRAMES = {
+  // 史莱姆 · 待机
+  idle: [
+    '.....OOOO.....',
+    '....OBBBBO....',
+    '...OBBBBBBO...',
+    '..OBBHBBBBBO..',
+    '.OBBBBBBBBBBO.',
+    '.OBBEBBBBEBBO.',
+    '.OBBEBBBBEBBO.',
+    '.OBBBBBBBBBBO.',
+    '.OBBBBMMBBBBO.',
+    '.OBBBBBBBBBBO.',
+    '..OBBBBBBBBO..',
+    '...OOOOOOOO...',
+  ],
+  // 史莱姆 · 开心（眼睛带光，咧嘴笑）
+  happy: [
+    '.....OOOO.....',
+    '....OBBBBO....',
+    '...OBBBBBBO...',
+    '..OBBBBBBBBO..',
+    '.OBBWBBBBWBBO.',
+    '.OBBEBBBBEBBO.',
+    '.OBBEBBBBEBBO.',
+    '.OBBBBBBBBBBO.',
+    '.OBBMMBBMMBBO.',
+    '.OBBBBBBBBBBO.',
+    '..OBBBBBBBBO..',
+    '...OOOOOOOO...',
+  ],
+  // 爱心（7x6）
+  heart: [
+    '.PP.PP.',
+    'PPPPPPP',
+    'PPPPPPP',
+    '.PPPPP.',
+    '..PPP..',
+    '...P...',
+  ],
+  // 星星（7x5）
+  sparkle: [
+    '...Y...',
+    '..YYY..',
+    '.YYYYY.',
+    '..YYY..',
+    '...Y...',
+  ],
+};
+
+function artBoxShadow(rows) {
+  const parts = [];
+  rows.forEach((row, y) => {
+    [...row].forEach((ch, x) => {
+      const color = PALETTE[ch];
+      if (color) parts.push(`${x * CELL}px ${y * CELL}px 0 0 ${color}`);
+    });
+  });
+  return parts.join(',');
+}
+
+const $pet = $('#pet');
+const $petSprite = $('#pet-sprite');
+const $petBubble = $('#pet-bubble');
+
+let bubbleTimer = null;
+function petSay(msg) {
+  $petBubble.textContent = msg;
+  $petBubble.hidden = false;
+  clearTimeout(bubbleTimer);
+  bubbleTimer = setTimeout(() => { $petBubble.hidden = true; }, 1800);
+}
+
+function petSetFrame(name) {
+  $petSprite.style.boxShadow = artBoxShadow(PET_FRAMES[name]);
+}
+
+let petRestTimer = null;
+function petJump(ms = 550) {
+  $pet.classList.remove('jump');
+  void $pet.offsetWidth;            // 强制重排，让动画能重复触发
+  $pet.classList.add('jump');
+  clearTimeout(petRestTimer);
+  petRestTimer = setTimeout(() => $pet.classList.remove('jump'), ms);
+}
+
+function petCelebrate() {
+  petSetFrame('happy');
+  petJump(900);
+  petHearts();
+  setTimeout(() => petSetFrame('idle'), 950);
+}
+
+function petHearts() {
+  const kinds = ['heart', 'heart', 'sparkle'];
+  kinds.forEach((kind, i) => {
+    const p = document.createElement('i');
+    p.className = 'pet-particle';
+    p.style.boxShadow = artBoxShadow(PET_FRAMES[kind]);
+    p.style.left = (8 + i * 16) + 'px';
+    p.style.animationDelay = (i * 0.15) + 's';
+    $pet.appendChild(p);
+    setTimeout(() => p.remove(), 1800);
+  });
+}
+
+// 点击宠物：跳一下 + 随机应援
+const CHEERS = ['上岸!', '加油!', '冲鸭!', '稳住!', '奥利给!'];
+$pet.addEventListener('click', () => {
+  petJump();
+  petSay(CHEERS[Math.floor(Math.random() * CHEERS.length)]);
+});
+
+/* ---------------- 渲染 ---------------- */
+
+function render() {
+  const total = todos.length;
+  const done = todos.filter(t => t.done).length;
+  const pending = total - done;
+  const rate = total ? Math.round(done / total * 100) : 0;
+
+  // 统计卡
+  $('#stat-total').textContent = total;
+  $('#stat-done').textContent = done;
+  $('#stat-pending').textContent = pending;
+  $('#stat-rate').textContent = `完成率 ${rate}%`;
+
+  // 弹窗内容
+  const nextTodo = todos.find(t => !t.done);
+  $('#popup-now').textContent = pending ? `还有 ${pending} 项待完成` : '今日任务全部完成!';
+  $('#popup-next').textContent = nextTodo ? nextTodo.content : '去休息一下吧';
+  $('#popup-meta').textContent = `已完成 ${done} / 共 ${total} 项 · 完成率 ${rate}%`;
+
+  // 分段进度条（10 格像素血条）
+  const $bar = $('#popup-bar');
+  $bar.innerHTML = '';
+  const filled = Math.round(rate / 10);
+  for (let i = 0; i < 10; i++) {
+    const seg = document.createElement('i');
+    seg.className = 'seg' + (i < filled ? ' on' : '');
+    $bar.appendChild(seg);
+  }
+
+  // 列表
+  const titles = { all: '待办清单', pending: '待完成', done: '已完成' };
+  $('#list-title').textContent = titles[filter];
+  const list = visibleTodos();
+  $('#list-count').textContent = list.length;
+  renderList(list);
+
+  // 过滤器选中态
+  document.querySelectorAll('.side-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.filter === filter)
+  );
+
+  // 全部完成 → 宠物特殊庆祝（只在状态变化的那一刻触发一次）
+  const allDone = total > 0 && pending === 0;
+  if (allDone && !lastAllDone) {
+    petSay('全搞定!');
+    petCelebrate();
+  }
+  lastAllDone = allDone;
+}
+
+function renderList(list) {
+  const $list = $('#list');
+  $list.innerHTML = '';
+
+  if (!list.length) {
+    const msgs = {
+      all: '还没有任务，写下今天第一件要做的事吧',
+      pending: '没有待完成的任务，全部搞定!',
+      done: '还没有完成的任务，去完成一件吧',
+    };
+    const li = document.createElement('li');
+    li.className = 'empty';
+    li.textContent = msgs[filter];
+    $list.appendChild(li);
+    return;
+  }
+
+  for (const t of list) {
+    const li = document.createElement('li');
+    li.className = 'item' + (t.done ? ' done' : '') + (t.id === editingId ? ' editing' : '');
+    li.dataset.id = t.id;   // 供勾选动画定位这一行
+
+    // 方形勾选框
+    const check = document.createElement('button');
+    check.className = 'check';
+    check.setAttribute('aria-label', t.done ? '标记为未完成' : '标记为已完成');
+    check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"><path d="M5.5 12.5l4 4 9-10"/></svg>';
+    check.addEventListener('click', () => toggleTodo(t.id));
+
+    // 内容区
+    const body = document.createElement('div');
+    body.className = 'item-body';
+    if (t.id === editingId) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'edit-input';
+      input.value = t.content;
+      input.maxLength = 200;
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') saveEdit(t.id, input.value);
+        if (e.key === 'Escape') { editingId = null; render(); }
+      });
+      body.appendChild(input);
+      requestAnimationFrame(() => {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+    } else {
+      const p = document.createElement('p');
+      p.className = 'item-text';
+      p.textContent = t.content;
+      body.appendChild(p);
+    }
+
+    // 编号标签
+    const id = document.createElement('span');
+    id.className = 'item-id';
+    id.textContent = '#' + t.id;
+
+    // 操作按钮
+    const actions = document.createElement('div');
+    actions.className = 'item-actions';
+    if (t.id === editingId) {
+      actions.append(
+        makeBtn('保存', 'primary', () => saveEdit(t.id, body.querySelector('input').value)),
+        makeBtn('取消', '', () => { editingId = null; render(); })
+      );
+    } else {
+      actions.append(
+        makeBtn('编辑', '', () => { editingId = t.id; render(); }),
+        makeBtn('删除', 'danger', () => removeTodo(t.id))
+      );
+    }
+
+    li.append(check, body, id, actions);
+    $list.appendChild(li);
+  }
+}
+
+function makeBtn(text, extraClass, onClick) {
+  const btn = document.createElement('button');
+  btn.className = 'btn-ghost' + (extraClass ? ' ' + extraClass : '');
+  btn.textContent = text;
+  btn.addEventListener('click', onClick);
+  return btn;
+}
+
+/* ---------------- 业务操作 ---------------- */
+
+async function loadTodos() {
+  try {
+    todos = await request(API);
+    render();
+  } catch (err) {
+    toast('加载失败，后端起了吗？', true);
+    console.error(err);
+  }
+}
+
+// 添加
+$('#composer').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const $input = $('#input');
+  const content = $input.value.trim();
+  if (!content) {
+    toast('内容不能为空', true);
+    $input.focus();
+    return;
+  }
+
+  const $submit = $('#submit-btn');
+  $submit.disabled = true;
+  try {
+    const created = await request(API, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+    todos.push({ id: created.id, content: created.content, done: false });
+    $input.value = '';
+    render();
+    toast('已添加');
+    petJump();
+    petSay('收到!');
+  } catch (err) {
+    toast('添加失败', true);
+    console.error(err);
+  } finally {
+    $submit.disabled = false;
+    $input.focus();
+  }
+});
+
+// 勾选完成 / 取消完成：先播动画，等动画结束再重渲染
+async function toggleTodo(id) {
+  const t = todos.find(x => x.id === id);
+  if (!t) return;
+  const willBeDone = !t.done;
+  const li = document.querySelector(`.item[data-id="${id}"]`);
+
+  // 立刻在 DOM 上播动画（不等接口返回，反馈零延迟）
+  if (li) li.classList.add(willBeDone ? 'checking' : 'unchecking');
+
+  try {
+    const result = await request(`${API}/${id}/toggle`, { method: 'PUT' });
+    t.done = result.done;
+  } catch (err) {
+    if (li) li.classList.remove('checking', 'unchecking');
+    toast('操作失败', true);
+    console.error(err);
+    return;
+  }
+
+  // 宠物反馈同步给（勾选那一刻就庆祝，而不是等行消失）
+  if (t.done) {
+    petSay('完成 +1');
+    petCelebrate();
+  } else {
+    petJump();
+    petSay('继续加油');
+  }
+
+  // 待办视图里勾完：划线动画后接闪烁退场，再重渲染
+  const leaving = willBeDone && filter === 'pending';
+  if (li && leaving) {
+    setTimeout(() => li.classList.add('vanishing'), 380);
+  }
+  setTimeout(() => render(), leaving ? 740 : 400);
+}
+
+// 保存编辑
+async function saveEdit(id, rawValue) {
+  const content = rawValue.trim();
+  if (!content) {
+    toast('内容不能为空', true);
+    return;
+  }
+
+  const current = todos.find(t => t.id === id);
+  if (current && current.content === content) {
+    editingId = null;
+    render();
+    return;
+  }
+
+  try {
+    const result = await request(`${API}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ content }),
+    });
+    if (result.message !== '已修改') {
+      toast(result.message, true);
+      await loadTodos();
+      return;
+    }
+    if (current) current.content = content;
+    editingId = null;
+    render();
+    toast('已修改');
+  } catch (err) {
+    toast('修改失败', true);
+    console.error(err);
+  }
+}
+
+// 删除
+async function removeTodo(id) {
+  try {
+    const result = await request(`${API}/${id}`, { method: 'DELETE' });
+    if (result.message !== `已删除编号为${id}的任务！`) {
+      toast(result.message, true);
+      await loadTodos();
+      return;
+    }
+    todos = todos.filter(t => t.id !== id);
+    if (editingId === id) editingId = null;
+    render();
+    toast('已删除');
+    petJump();
+    petSay('删掉啦');
+  } catch (err) {
+    toast('删除失败', true);
+    console.error(err);
+  }
+}
+
+/* ---------------- 弹窗 ---------------- */
+
+const $backdrop = $('#backdrop');
+
+function openPopup() { $backdrop.hidden = false; }
+function closePopup() { $backdrop.hidden = true; }
+$('#btn-popup').addEventListener('click', openPopup);
+$('#btn-datecard').addEventListener('click', openPopup);
+$('#popup-close').addEventListener('click', closePopup);
+$backdrop.addEventListener('click', (e) => {
+  if (e.target === $backdrop) closePopup();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !$backdrop.hidden) closePopup();
+});
+
+/* ---------------- 过滤器 + 启动 ---------------- */
+
+document.querySelectorAll('.side-btn').forEach(b =>
+  b.addEventListener('click', () => {
+    filter = b.dataset.filter;
+    render();
+  })
+);
+
+const now = new Date();
+const hour = now.getHours();
+$('#greet').textContent =
+  (hour < 6 ? '夜深了' : hour < 12 ? '早上好' : hour < 18 ? '下午好' : '晚上好') + '，周同学';
+$('#today-line').textContent = fmtDate(now);
+$('#datecard-date').textContent = fmtDateEn(now);
+$('#popup-date').textContent = '今天 · ' + fmtDate(now);
+
+petSetFrame('idle');
+loadTodos();
+$('#input').focus();
+</script>
+
+</body>
+</html>
